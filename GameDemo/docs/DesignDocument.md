@@ -30,6 +30,13 @@ tangible and fun in a few minutes at a booth.
 2. **Readable at a glance** (clear art, clear goals, controller prompts).
 3. **Self-contained levels** that share a core movement/collectible engine.
 
+### Scope rule (short-term project)
+- **One module = one short level.** Not a tour of the whole syllabus.
+- **One signature mechanic per level** — pick the *single* concept from that
+  module that makes the best game, and cut the rest. A module's other concepts
+  are only worth including if they genuinely improve the level as a game, not for
+  completeness. When a concept doesn't translate to fun platforming, drop it.
+
 ---
 
 ## 2. Core systems (shared across all levels)
@@ -57,6 +64,11 @@ These are built once and reused:
 
 Difficulty rises across the run, peaking at the **Team Project** (Level 4) as the
 deliberate "hard level," then easing into more strategic levels.
+
+> **Detailed per-level notes** (derived from the actual module lecture slides)
+> live in `docs/levels/`. So far: [Level 6 — DS&A](levels/06-data-structures-and-algorithms.md)
+> and [Level 7 — SPM](levels/07-software-project-management.md). The summaries
+> below are the overview; the `docs/levels/` files are the working detail.
 
 > **Open question — ordering:** the list below is your requested order. Note DS&A
 > and OOP are usually *early* in a real degree while Team Project is *late*.

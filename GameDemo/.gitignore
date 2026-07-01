@@ -100,3 +100,6 @@ InitTestScene*.unity*
 
 # Claude Code / AI assistant files
 .claude/
+
+# Reference material (lecture slides etc.) — kept local, not committed
+docs/reference/
