@@ -4,16 +4,16 @@ namespace OpenDay
     /// The Computer Science modules the open-day demo is built around.
     /// Each module becomes a themed feature somewhere in the level
     /// (e.g. Databases -> a physical key you must collect).
-    /// Add new modules here as levels are built out.
+    /// Scope is fixed at three levels, each pairing related modules; Team
+    /// Project was repurposed into the Title Screen rather than built out as
+    /// its own level.
     /// </summary>
     public enum CSModule
     {
         ObjectOrientedProgramming,      // Level 1
+        DataStructuresAndAlgorithms,    // Level 1
         SoftwareEngineering,            // Level 2
-        Databases,                      // Level 3
-        TeamProject,                    // Level 4 (hard)
-        AIVisionAndReality,             // Level 5
-        DataStructuresAndAlgorithms,    // Level 6
-        SoftwareProjectManagement       // Level 7
+        SoftwareProjectManagement,      // Level 2
+        Databases                       // Level 3
     }
 }

@@ -21,7 +21,8 @@ tangible and fun in a few minutes at a booth.
   (keyboard/WASD kept only as a dev fallback). No manual required — teach through
   play and on-screen prompts.
 - **Low failure friction.** Dying should cost seconds, not progress. This is a
-  showcase, not a challenge — except the deliberately Hard level.
+  showcase, not a challenge (the deliberately-hard capstone level was cut —
+  see §3 scope decision).
 - **Legible theming.** A player who has *never* studied CS should still have fun;
   a player who *has* should get the joke. Each mechanic maps to a real concept.
 
@@ -45,8 +46,9 @@ These are built once and reused:
 
 - **Player movement** — **2D platformer** (run + jump), controller-first.
   *(scaffolded: `PlayerController.cs`)*
-- **Module "keys" / collectibles** — the recurring motif. Each level yields a
-  themed collectible that represents "you learned this module." *(scaffolded:
+- **Module "keys" / collectibles** — the recurring motif. Each level yields one
+  themed collectible per paired module (two per level, except Databases which
+  has one) that represents "you learned this module." *(scaffolded:
   `Collectible.cs`, `PlayerInventory.cs`, `CSModule.cs`)*
 - **HUD** — keys collected, current objective, optional timer.
 - **Level manager** — loads levels, tracks win/lose, handles transitions.
@@ -62,35 +64,68 @@ These are built once and reused:
 
 ## 3. Level plan
 
-Difficulty rises across the run, peaking at the **Team Project** (Level 4) as the
-deliberate "hard level," then easing into more strategic levels.
+> **SCOPE DECISION (locked):** the demo ships with exactly **three playable
+> levels**, each pairing two related modules so all five surviving modules fit:
+> - **Level 1 — Object-Oriented Programming & Data Structures and Algorithms**
+> - **Level 2 — Software Engineering & Software Project Management**
+> - **Level 3 — Databases**
+>
+> **Team Project is cut as a level and repurposed into the Title Screen**
+> instead of being built out as the capstone/hard level. **AI: Vision and
+> Reality** is also out of scope and was never built. Each level now yields
+> **two** collectible keys instead of one (one per paired module) —
+> `PlayerInventory` already supports collecting more than one key per level
+> with no changes needed.
+
+Difficulty rises across the three built levels, ending with Databases; there is
+no capstone "hard level" in the current scope.
 
 > **Detailed per-level notes** (derived from the actual module lecture slides)
-> live in `docs/levels/`. So far: [Level 6 — DS&A](levels/06-data-structures-and-algorithms.md)
-> and [Level 7 — SPM](levels/07-software-project-management.md). The summaries
-> below are the overview; the `docs/levels/` files are the working detail.
+> live in `docs/levels/`. The DS&A and SPM detail docs
+> ([06](levels/06-data-structures-and-algorithms.md),
+> [07](levels/07-software-project-management.md)) describe mechanics now folded
+> into Levels 1 and 2 below rather than standalone levels.
 
 > **Open question — ordering:** the list below is your requested order. Note DS&A
-> and OOP are usually *early* in a real degree while Team Project is *late*.
-> Current order is fine as a *difficulty* curve; flag if you want it to mirror the
-> actual course timeline instead.
+> and OOP are usually *early* in a real degree. Current order is fine as a
+> *difficulty* curve for the three built levels.
 
-### Level 1 — Object-Oriented Programming *(intro / tutorial level)*
+### Level 1 — Object-Oriented Programming & Data Structures and Algorithms *(intro / tutorial level)*
+Two collectible keys: an **OOP key** and a **DS&A key**. Because it's the first
+level, it doubles as the movement tutorial.
+
+**OOP thread**
 - **Concept focus:** classes vs. objects, instantiation, inheritance,
   encapsulation, polymorphism.
 - **Signature mechanic — "instantiate objects from a blueprint":** find a
   **class blueprint**, then spawn **object instances** (crates/platforms/helpers)
-  to solve traversal puzzles. Because it's the first level, it doubles as the
-  movement tutorial.
+  to solve traversal puzzles.
 - **Key-part features:**
   - *Encapsulation* → private rooms behind walls; the only way in is a public
     "method" switch (you can't touch the private field directly).
   - *Inheritance* → step on a parent "class" pad to inherit an ability (e.g. a
     child object gains the parent's ability to open certain doors).
   - *Polymorphism* → one button, context-dependent behaviour on different objects.
-- **Win:** instantiate the right object to reach the exit; collect the OOP key.
 
-### Level 2 — Software Engineering
+**DS&A thread**
+- **Concept focus:** stacks, queues, trees, graphs, sorting, searching, recursion,
+  Big-O.
+- **Signature mechanic — "structures you stand on":** the environment *is* the
+  data structure.
+- **Key-part features:**
+  - *Stack / queue* → LIFO/FIFO lifts and conveyor platforms.
+  - *Sorting* → arrange weighted crates in order to open a gate.
+  - *Search* → a binary-search door puzzle (halve the search space each guess).
+  - *Graph/tree* → a maze that is literally a graph; find the path (bonus:
+    shortest path rewarded).
+  - *Recursion* → rooms nested within rooms.
+
+- **Win:** collect both the OOP key and the DS&A key to reach the exit.
+
+### Level 2 — Software Engineering & Software Project Management
+Two collectible keys: an **SE key** and an **SPM key**.
+
+**SE thread**
 - **Concept focus:** the software lifecycle (requirements → design → build → test
   → deploy), debugging, version control.
 - **Signature mechanic — "ship a build through the pipeline":** progress through
@@ -102,7 +137,20 @@ deliberate "hard level," then easing into more strategic levels.
     (cheap, on-theme respawns).
   - *Testing* → a gate that only opens if your "build" passes (a small puzzle
     check) — ship a broken build and it bounces back.
-- **Win:** pass tests, deploy, collect the SE key.
+
+**SPM thread**
+- **Concept focus:** planning, scheduling (Gantt/critical path), resource &
+  budget allocation, risk, Agile sprints.
+- **Signature mechanic — "allocate limited resources against a deadline":** more
+  strategy than action — sequence tasks along a **critical path**, spend limited
+  resources, manage risk events.
+- **Key-part features:**
+  - *Critical path* → tasks with dependencies; wrong order wastes time.
+  - *Resources/budget* → a limited pool to spend on completing tasks.
+  - *Risk* → random risk events you mitigate with contingency.
+  - *Sprints* → timed rounds of work.
+
+- **Win:** collect both the SE key and the SPM key, pass tests, deploy.
 
 ### Level 3 — Databases *(the brief's headline example)*
 - **Concept focus:** tables, primary/foreign keys, relationships, queries,
@@ -117,62 +165,17 @@ deliberate "hard level," then easing into more strategic levels.
   - *Indexing* → an index acts as a fast-travel/shortcut once discovered.
 - **Win:** chain keys across tables to reach the final record; collect the DB key.
 
-### Level 4 — Team Project **(Hard Level)**
-- **Concept focus:** collaboration, coordination, communication, integration,
-  merge conflicts, scope creep, deadlines.
-- **Signature mechanic — "coordinate multiple workers":** control/juggle several
-  characters or tasks at once (echoes OOP object-instancing but under pressure).
-  This level **combines mechanics from Levels 1–3** — the "capstone."
-- **Key-part features:**
-  - *Merge conflicts* → hazards that appear when two work-streams collide; you
-    must resolve them.
-  - *Standups* → checkpoints/sync points.
-  - *Scope creep* → an escalating hazard (rising water / spreading mess) forcing
-    momentum.
-  - *Roles* → different workers have different abilities; you must delegate.
-- **Win:** integrate all components before the deadline; collect the Team key.
-- **Note:** intentionally the difficulty spike. Keep failure cheap even here so
-  booth players don't rage-quit — "hard" via complexity, not punishment.
+### Cut modules — Team Project & AI: Vision and Reality
+> Neither built, and neither planned. Team Project's slot became the **Title
+> Screen** (see §7). Kept below only as reference in case scope ever expands.
 
-### Level 5 — AI: Vision and Reality
-- **Concept focus:** computer vision, perception, classification, training data,
-  and the gap between AI hype ("vision") and messy "reality."
-- **Signature mechanic — "seen vs. unseen":** stealth against **vision-based
-  detectors** (guard/camera detection cones = object detection).
-- **Key-part features:**
-  - *Training data* → feed a classifier examples to change what it recognises
-    (reprogram a guard to ignore you / target something else).
-  - *Reality vs. vision twist* → the AI mispredicts; exploit **false
-    positives/negatives** to slip past.
-  - *Perception* → line-of-sight, occlusion, moving out of frame.
-- **Win:** exploit the model's blind spots to reach the goal; collect the AI key.
+**Team Project (would-be hard level):** collaboration, merge conflicts, scope
+creep, deadlines — "coordinate multiple workers" combining mechanics from other
+levels as a capstone.
 
-### Level 6 — Data Structures & Algorithms
-- **Concept focus:** stacks, queues, trees, graphs, sorting, searching, recursion,
-  Big-O.
-- **Signature mechanic — "structures you stand on":** the environment *is* the
-  data structure.
-- **Key-part features:**
-  - *Stack / queue* → LIFO/FIFO lifts and conveyor platforms.
-  - *Sorting* → arrange weighted crates in order to open a gate.
-  - *Search* → a binary-search door puzzle (halve the search space each guess).
-  - *Graph/tree* → a maze that is literally a graph; find the path (bonus:
-    shortest path rewarded).
-  - *Recursion* → rooms nested within rooms.
-- **Win:** solve the structure puzzles to the exit; collect the DS&A key.
-
-### Level 7 — Software Project Management *(strategic finale)*
-- **Concept focus:** planning, scheduling (Gantt/critical path), resource &
-  budget allocation, risk, Agile sprints.
-- **Signature mechanic — "allocate limited resources against a deadline":** more
-  strategy than action — sequence tasks along a **critical path**, spend limited
-  resources, manage risk events.
-- **Key-part features:**
-  - *Critical path* → tasks with dependencies; wrong order wastes time.
-  - *Resources/budget* → a limited pool to spend on completing tasks.
-  - *Risk* → random risk events you mitigate with contingency.
-  - *Sprints* → timed rounds of work.
-- **Win:** deliver the project on time and on budget; collect the final key.
+**AI: Vision and Reality:** computer vision, perception, classification —
+"seen vs. unseen" stealth against vision-based detectors, exploiting false
+positives/negatives.
 
 ---
 
@@ -188,8 +191,9 @@ deliberate "hard level," then easing into more strategic levels.
   the Team Project / SPM levels, and use cheap checkpoint respawns elsewhere.)
 
 **Flow:**
-`Title → [Level Select / Hub?] → L1 → L2 → … → L7 → Win`
-(Lose loops back to the current level's last checkpoint.)
+`Title → L1 → L2 → L3 → Win`
+(Lose loops back to the current level's last checkpoint. No Hub/level-select
+and no Levels 4–7 in current scope — see §3.)
 
 ---
 
@@ -227,27 +231,34 @@ Things worth planning now, roughly in priority order for a booth demo:
 
 ## 6. Suggested build order (de-risking the scope)
 
-Building all 7 levels is a lot. Recommend a **vertical slice** first:
+Scope is locked at **three levels** (§3), so the build order is short:
 
 1. **Core systems** — movement (done), collectibles (done), HUD, level manager,
    Title/Win/Lose screens. *This proves the whole loop end-to-end.*
 2. **Level 3 (Databases)** — the headline concept, and the key/door mechanic is
-   the simplest to prototype. Best first level to fully build.
-3. **Level 1 (OOP)** — doubles as the tutorial once movement is finalised.
-4. Then **6 (DS&A)**, **2 (SE)**, **5 (AI)**.
-5. **7 (SPM)** and **4 (Team Project, Hard)** last — they reuse mechanics from the
-   others, so build them once the parts exist.
-6. **Hub, pause, attract mode, settings** — layer in once ≥2 levels are playable.
+   the simplest to prototype. Best first level to fully build. *(done)*
+3. **Level 1 (OOP + DS&A)** — doubles as the tutorial once movement is
+   finalised. *(scene + both collectibles scaffolded)*
+4. **Level 2 (SE + SPM)** *(scene + both collectibles scaffolded)*
+5. **Title Screen** — repurposed from the cut Team Project slot (§3). *(scene
+   scaffolded; see `Assets/Editor/LevelBuilder.cs` → `BuildTitleScreen`.)*
+6. **Pause, attract mode, settings** — layer in as time allows.
 
-**Minimum viable demo:** Title → Hub → 1 fully-built level → Win/Lose. Everything
-else is expansion.
+Team Project and AI: Vision and Reality are **not** part of the build — see the
+scope decision in §3.
+
+**Minimum viable demo:** Title → L1 → L2 → L3 → Win/Lose. Everything else is
+expansion.
 
 ---
 
 ## 7. Decisions needed
 - [x] Movement model: **2D platformer** (run + jump). *(§2)*
+- [x] Scope: **locked at 3 levels**, each pairing two modules — L1: OOP + DS&A,
+      L2: SE + SPM, L3: Databases. Team Project cut and repurposed as the Title
+      Screen; AI: Vision and Reality out of scope. *(§3)*
 - [ ] Level ordering: keep difficulty order, or mirror real course timeline? *(§3)*
 - [ ] Lose = full screen everywhere, or cheap checkpoints + Lose only on hard
       levels? *(§4)*
-- [ ] Hub/level-select **yes/no** (affects Title flow). *(§5)*
+- [x] Hub/level-select: **no** — flow is `Title → L1 → L2 → L3 → Win`. *(§4)*
 - [ ] Art direction / who is the player character? (a student?)

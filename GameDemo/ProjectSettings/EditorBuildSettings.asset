@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/TitleScreen.unity
+    guid: ce89cee045c1f589f8bced06377d0f94
+  - enabled: 1
     path: Assets/Scenes/Level1_ObjectOrientedProgramming.unity
     guid: 25314ad3e8e279082913ba10b8c3f96e
   - enabled: 1
@@ -14,9 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level3_Databases.unity
     guid: 468d3240f920de7fd9ac5d6bc126f961
-  - enabled: 1
-    path: Assets/Scenes/Level4_TeamProject.unity
-    guid: ce89cee045c1f589f8bced06377d0f94
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -20,6 +20,22 @@ namespace OpenDay
 
         public int Count => _collected.Count;
 
+        /// <summary>Every module collected so far, for saving or display.</summary>
+        public IReadOnlyCollection<CSModule> Collected => _collected;
+
+        private void Awake()
+        {
+            // Resuming from a save: the title screen queues the modules the
+            // player already had before this level loaded.
+            if (SaveSystem.TryConsumePendingResume(out var modules))
+            {
+                foreach (var module in modules)
+                {
+                    _collected.Add(module);
+                }
+            }
+        }
+
         /// <summary>
         /// Records a module as collected. Returns false if it was already held
         /// (so callers can ignore duplicate pickups).
