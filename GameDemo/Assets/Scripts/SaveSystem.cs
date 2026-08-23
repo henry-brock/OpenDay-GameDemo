@@ -15,10 +15,22 @@ namespace OpenDay
         private const string HasSaveKey = "OpenDay.HasSave";
         private const string LevelBuildIndexKey = "OpenDay.LevelBuildIndex";
         private const string CollectedModulesKey = "OpenDay.CollectedModules";
+        private const string MusicVolumeKey = "OpenDay.MusicVolume";
 
         private static CSModule[] _pendingResumeModules;
 
         public static bool HasSave => PlayerPrefs.GetInt(HasSaveKey, 0) == 1;
+
+        /// <summary>Music volume, 0–1. Defaults low-ish; an open-day booth is already loud.</summary>
+        public static float MusicVolume
+        {
+            get => PlayerPrefs.GetFloat(MusicVolumeKey, 0.6f);
+            set
+            {
+                PlayerPrefs.SetFloat(MusicVolumeKey, Mathf.Clamp01(value));
+                PlayerPrefs.Save();
+            }
+        }
 
         public static void Save(int levelBuildIndex, IEnumerable<CSModule> collectedModules)
         {

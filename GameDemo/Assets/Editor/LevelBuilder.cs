@@ -24,6 +24,7 @@ namespace OpenDay.Editor
         private const string ScenesFolder = "Assets/Scenes";
         private const string ActionsAssetPath = "Assets/InputSystem_Actions.inputactions";
         private const string TitleScreenPath = "Assets/Scenes/TitleScreen.unity";
+        private const string AudioFolder = "Assets/Audio";
 
         private struct Platform
         {
@@ -238,6 +239,7 @@ namespace OpenDay.Editor
 
             CreateCamera();
             CreateEventSystem(actions);
+            CreateMusic("TitleScreen");
 
             var canvas = CreateCanvas("Canvas");
             CreateTitleText(canvas.transform, "Open Day Demo", new Vector2(0f, 260f), 64);
@@ -380,6 +382,7 @@ namespace OpenDay.Editor
             CreateCamera();
             CreateGlobalLight();
             CreateEventSystem(actions);
+            CreateMusic(level.FileName);
 
             var groundParent = new GameObject("Ground").transform;
             foreach (var platform in level.Platforms)
@@ -687,6 +690,58 @@ namespace OpenDay.Editor
             so.ApplyModifiedProperties();
 
             CreateWorldLabel(def.ReaderPosition + new Vector3(0f, 1f, 0f), $"FK -> {def.Required}", 0.11f);
+        }
+
+        /// <summary>
+        /// Gives the scene its own music. Tracks are picked up by convention from
+        /// Assets/Audio/&lt;sceneName&gt;/, so dropping files in that folder and
+        /// rebuilding is all that's needed — nothing to wire up by hand, and the
+        /// choice survives the scene being regenerated.
+        /// </summary>
+        private static void CreateMusic(string sceneName)
+        {
+            var go = new GameObject("Music");
+            var source = go.AddComponent<AudioSource>();
+            source.playOnAwake = false;
+            source.volume = 0.6f;
+
+            var player = go.AddComponent<MusicPlayer>();
+            var clips = LoadMusicFor(sceneName);
+
+            var so = new SerializedObject(player);
+            var tracks = so.FindProperty("tracks");
+            tracks.arraySize = clips.Length;
+            for (var i = 0; i < clips.Length; i++)
+            {
+                tracks.GetArrayElementAtIndex(i).objectReferenceValue = clips[i];
+            }
+            so.ApplyModifiedProperties();
+
+            Debug.Log(clips.Length > 0
+                ? $"{sceneName}: added {clips.Length} music track(s)."
+                : $"{sceneName}: no music yet — drop audio files into {AudioFolder}/{sceneName}/ and rebuild.");
+        }
+
+        private static AudioClip[] LoadMusicFor(string sceneName)
+        {
+            if (!AssetDatabase.IsValidFolder(AudioFolder))
+            {
+                AssetDatabase.CreateFolder("Assets", "Audio");
+            }
+
+            // Created up front so the folders are sitting there ready to fill.
+            var sceneFolder = $"{AudioFolder}/{sceneName}";
+            if (!AssetDatabase.IsValidFolder(sceneFolder))
+            {
+                AssetDatabase.CreateFolder(AudioFolder, sceneName);
+            }
+
+            return AssetDatabase.FindAssets("t:AudioClip", new[] { sceneFolder })
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .OrderBy(path => path)
+                .Select(AssetDatabase.LoadAssetAtPath<AudioClip>)
+                .Where(clip => clip != null)
+                .ToArray();
         }
 
         /// <summary>World-space text, so booth players can read what each terminal does.</summary>
