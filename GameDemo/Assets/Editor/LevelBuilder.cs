@@ -65,6 +65,38 @@ namespace OpenDay.Editor
 
             /// <summary>The gate the pipeline stages unlock (blocks the SE key until deployed).</summary>
             public Platform? PipelineGate;
+
+            /// <summary>Databases primary keys the player can carry, one at a time.</summary>
+            public PrimaryKeyDef[] PrimaryKeys;
+
+            /// <summary>Foreign-key doors, each opened by its matching primary key.</summary>
+            public DoorDef[] Doors;
+        }
+
+        private struct PrimaryKeyDef
+        {
+            public TableKey Table;
+            public Color Color;
+            public Vector3 Position;
+            public PrimaryKeyDef(TableKey table, Color color, Vector3 position)
+            {
+                Table = table;
+                Color = color;
+                Position = position;
+            }
+        }
+
+        private struct DoorDef
+        {
+            public TableKey Required;
+            public Vector3 ReaderPosition;
+            public Platform Barrier;
+            public DoorDef(TableKey required, Vector3 readerPosition, Platform barrier)
+            {
+                Required = required;
+                ReaderPosition = readerPosition;
+                Barrier = barrier;
+            }
         }
 
         [MenuItem("OpenDay/Build Levels")]
@@ -135,15 +167,27 @@ namespace OpenDay.Editor
                 {
                     FileName = "Level3_Databases",
                     DisplayName = "Level 3 - Databases",
-                    PlayerStart = new Vector3(-6f, 1f, 0f),
+                    PlayerStart = new Vector3(-10f, 1f, 0f),
                     Collectibles = new[]
                     {
-                        // yellow, matches the "key" theme
-                        new ModuleCollectible(CSModule.Databases, new Color(0.95f, 0.85f, 0.1f), new Vector3(6f, 1f, 0f)),
+                        // yellow, matches the "key" theme - the final record, behind both doors
+                        new ModuleCollectible(CSModule.Databases, new Color(0.95f, 0.85f, 0.1f), new Vector3(8f, 0.6f, 0f)),
                     },
                     Platforms = new[]
                     {
-                        new Platform(0f, -0.5f, 20f, 1f),
+                        new Platform(0f, -0.5f, 24f, 1f),      // main floor
+                    },
+                    // Both primary keys sit in the first table, but only one key can be
+                    // carried at a time — so the doors' order forces a trip back for the second.
+                    PrimaryKeys = new[]
+                    {
+                        new PrimaryKeyDef(TableKey.Customers, new Color(0.3f, 0.55f, 0.95f), new Vector3(-9f, 0.6f, 0f)),
+                        new PrimaryKeyDef(TableKey.Orders, new Color(0.85f, 0.3f, 0.7f), new Vector3(-6f, 0.6f, 0f)),
+                    },
+                    Doors = new[]
+                    {
+                        new DoorDef(TableKey.Orders, new Vector3(-3f, 0.4f, 0f), new Platform(-2f, 5f, 1f, 10f)),
+                        new DoorDef(TableKey.Customers, new Vector3(3f, 0.4f, 0f), new Platform(4f, 5f, 1f, 10f)),
                     },
                 },
             };
@@ -359,6 +403,22 @@ namespace OpenDay.Editor
                 CreatePipeline(level.PipelineStages, level.PipelineGate.Value, groundLayer);
             }
 
+            if (level.PrimaryKeys != null)
+            {
+                foreach (var primaryKey in level.PrimaryKeys)
+                {
+                    CreatePrimaryKey(primaryKey);
+                }
+            }
+
+            if (level.Doors != null)
+            {
+                foreach (var door in level.Doors)
+                {
+                    CreateForeignKeyDoor(door, groundLayer);
+                }
+            }
+
             CreatePauseMenu();
 
             var path = $"{ScenesFolder}/{level.FileName}.unity";
@@ -481,6 +541,7 @@ namespace OpenDay.Editor
 
             go.AddComponent<PlayerInventory>();
             go.AddComponent<PlayerInteractor>();
+            go.AddComponent<KeyHolder>();
 
             var playerInput = go.AddComponent<PlayerInput>();
             playerInput.actions = actions;
@@ -577,6 +638,55 @@ namespace OpenDay.Editor
             so.ApplyModifiedProperties();
 
             CreateWorldLabel(position + new Vector3(0f, 1f, 0f), label, 0.12f);
+        }
+
+        private static void CreatePrimaryKey(PrimaryKeyDef def)
+        {
+            var go = new GameObject($"PrimaryKey_{def.Table}");
+            go.transform.position = def.Position;
+            go.transform.localScale = new Vector3(0.6f, 0.6f, 1f);
+
+            var renderer = go.AddComponent<SpriteRenderer>();
+            renderer.sprite = SquareSprite;
+            renderer.color = def.Color;
+
+            var primaryKey = go.AddComponent<PrimaryKey>();
+            var so = new SerializedObject(primaryKey);
+            so.FindProperty("table").enumValueIndex = (int)def.Table;
+            so.ApplyModifiedProperties();
+
+            CreateWorldLabel(def.Position + new Vector3(0f, 1f, 0f), $"PK: {def.Table}", 0.11f);
+        }
+
+        private static void CreateForeignKeyDoor(DoorDef def, int groundLayer)
+        {
+            var barrier = new GameObject($"Barrier_{def.Required}");
+            barrier.transform.position = def.Barrier.Position;
+            barrier.transform.localScale = new Vector3(def.Barrier.Size.x, def.Barrier.Size.y, 1f);
+            barrier.layer = groundLayer;
+
+            var barrierRenderer = barrier.AddComponent<SpriteRenderer>();
+            barrierRenderer.sprite = SquareSprite;
+            barrierRenderer.color = new Color(0.4f, 0.35f, 0.5f);
+
+            var barrierCollider = barrier.AddComponent<BoxCollider2D>();
+            barrierCollider.size = Vector2.one; // scaled by transform
+
+            var reader = new GameObject($"ForeignKeyReader_{def.Required}");
+            reader.transform.position = def.ReaderPosition;
+            reader.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
+
+            var readerRenderer = reader.AddComponent<SpriteRenderer>();
+            readerRenderer.sprite = SquareSprite;
+            readerRenderer.color = new Color(0.9f, 0.9f, 0.95f);
+
+            var door = reader.AddComponent<ForeignKeyDoor>();
+            var so = new SerializedObject(door);
+            so.FindProperty("required").enumValueIndex = (int)def.Required;
+            so.FindProperty("barrier").objectReferenceValue = barrier;
+            so.ApplyModifiedProperties();
+
+            CreateWorldLabel(def.ReaderPosition + new Vector3(0f, 1f, 0f), $"FK -> {def.Required}", 0.11f);
         }
 
         /// <summary>World-space text, so booth players can read what each terminal does.</summary>
