@@ -59,6 +59,12 @@ namespace OpenDay.Editor
 
             /// <summary>Where to place an OOP/DS&amp;A crate-stacking blueprint switch, if this level has one.</summary>
             public Vector3? BlueprintPosition;
+
+            /// <summary>SE/SPM pipeline terminals, in the order they must be run.</summary>
+            public Vector3[] PipelineStages;
+
+            /// <summary>The gate the pipeline stages unlock (blocks the SE key until deployed).</summary>
+            public Platform? PipelineGate;
         }
 
         [MenuItem("OpenDay/Build Levels")]
@@ -77,42 +83,53 @@ namespace OpenDay.Editor
                 {
                     FileName = "Level1_ObjectOrientedProgramming",
                     DisplayName = "Level 1 - Object-Oriented Programming & Data Structures and Algorithms",
-                    PlayerStart = new Vector3(-6f, 1f, 0f),
+                    PlayerStart = new Vector3(0f, 1f, 0f),
                     Collectibles = new[]
                     {
                         // orange - OOP
                         new ModuleCollectible(CSModule.ObjectOrientedProgramming, new Color(0.95f, 0.55f, 0.1f), new Vector3(6f, 3.2f, 0f)),
-                        // purple - Data Structures & Algorithms, up on the high ledge the crate stack reaches
-                        new ModuleCollectible(CSModule.DataStructuresAndAlgorithms, new Color(0.55f, 0.35f, 0.85f), new Vector3(-3f, 7f, 0f)),
+                        // purple - Data Structures & Algorithms, walled off on the far left
+                        new ModuleCollectible(CSModule.DataStructuresAndAlgorithms, new Color(0.55f, 0.35f, 0.85f), new Vector3(-9f, 0.6f, 0f)),
                     },
                     Platforms = new[]
                     {
-                        new Platform(0f, -0.5f, 20f, 1f),      // main floor
+                        new Platform(0f, -0.5f, 24f, 1f),      // main floor
                         new Platform(6f, 2f, 3f, 0.5f),        // platform under the OOP collectible
-                        new Platform(-3f, 6.25f, 2.5f, 0.5f),  // high ledge under the DS&A collectible
+                        // Wall guarding the DS&A key: a plain jump reaches 7.34 units, so
+                        // this 9-unit wall needs a couple of crates stacked beside it.
+                        new Platform(-6f, 4.5f, 1f, 9f),
                     },
-                    // OOP "instantiate an object" blueprint, spawns stackable crates
-                    // — a couple stacked crates give the extra height to reach the ledge above.
-                    BlueprintPosition = new Vector3(-3f, 0f, 0f),
+                    // OOP "instantiate an object" blueprint, spawns stackable crates.
+                    BlueprintPosition = new Vector3(-3f, 0.4f, 0f),
                 },
                 new LevelDef
                 {
                     FileName = "Level2_SoftwareEngineering",
                     DisplayName = "Level 2 - Software Engineering & Software Project Management",
-                    PlayerStart = new Vector3(-7f, 1f, 0f),
+                    PlayerStart = new Vector3(-9f, 1f, 0f),
                     Collectibles = new[]
                     {
-                        // teal - Software Engineering
-                        new ModuleCollectible(CSModule.SoftwareEngineering, new Color(0.15f, 0.7f, 0.65f), new Vector3(7f, 4.7f, 0f)),
-                        // green - Software Project Management
-                        new ModuleCollectible(CSModule.SoftwareProjectManagement, new Color(0.25f, 0.75f, 0.35f), new Vector3(2f, 2.2f, 0f)),
+                        // teal - Software Engineering, behind the deploy gate
+                        new ModuleCollectible(CSModule.SoftwareEngineering, new Color(0.15f, 0.7f, 0.65f), new Vector3(8f, 0.6f, 0f)),
+                        // green - Software Project Management, up on a ledge along the way
+                        new ModuleCollectible(CSModule.SoftwareProjectManagement, new Color(0.25f, 0.75f, 0.35f), new Vector3(2f, 2.9f, 0f)),
                     },
                     Platforms = new[]
                     {
-                        new Platform(-4f, -0.5f, 8f, 1f),
-                        new Platform(2f, 1.5f, 4f, 0.5f),
-                        new Platform(7f, 3.5f, 3f, 0.5f),
+                        new Platform(0f, -0.5f, 24f, 1f),      // main floor
+                        new Platform(2f, 2f, 3f, 0.5f),        // ledge under the SPM collectible
                     },
+                    // Terminals are deliberately NOT in left-to-right order, so walking
+                    // straight through runs them out of sequence and resets the pipeline.
+                    PipelineStages = new[]
+                    {
+                        new Vector3(-4f, 0.4f, 0f),   // 1. Requirements
+                        new Vector3(-8f, 0.4f, 0f),   // 2. Build
+                        new Vector3(-1f, 0.4f, 0f),   // 3. Test
+                    },
+                    // Tall enough to run off the top of the fixed camera's view, so it
+                    // reads as impassable and can't be cleared by jumping.
+                    PipelineGate = new Platform(5.5f, 5f, 1f, 10f),
                 },
                 new LevelDef
                 {
@@ -337,6 +354,11 @@ namespace OpenDay.Editor
                 CreateBlueprint(level.BlueprintPosition.Value, groundLayer);
             }
 
+            if (level.PipelineStages != null && level.PipelineGate.HasValue)
+            {
+                CreatePipeline(level.PipelineStages, level.PipelineGate.Value, groundLayer);
+            }
+
             CreatePauseMenu();
 
             var path = $"{ScenesFolder}/{level.FileName}.unity";
@@ -500,6 +522,78 @@ namespace OpenDay.Editor
             so.FindProperty("crateSprite").objectReferenceValue = SquareSprite;
             so.FindProperty("groundLayer").intValue = groundLayer;
             so.ApplyModifiedProperties();
+        }
+
+        private static readonly string[] PipelineStageNames = { "1. Requirements", "2. Build", "3. Test" };
+
+        private static void CreatePipeline(Vector3[] stagePositions, Platform gatePlatform, int groundLayer)
+        {
+            var gate = CreatePipelineGate(gatePlatform, groundLayer, stagePositions.Length);
+
+            for (var i = 0; i < stagePositions.Length; i++)
+            {
+                var label = i < PipelineStageNames.Length ? PipelineStageNames[i] : $"{i + 1}. Stage";
+                CreatePipelineStage(stagePositions[i], i, gate, label);
+            }
+        }
+
+        private static PipelineGate CreatePipelineGate(Platform platform, int groundLayer, int requiredStages)
+        {
+            var go = new GameObject("DeployGate");
+            go.transform.position = platform.Position;
+            go.transform.localScale = new Vector3(platform.Size.x, platform.Size.y, 1f);
+            go.layer = groundLayer;
+
+            var renderer = go.AddComponent<SpriteRenderer>();
+            renderer.sprite = SquareSprite;
+            renderer.color = new Color(0.75f, 0.2f, 0.25f); // locked red, matches PipelineGate
+
+            var collider = go.AddComponent<BoxCollider2D>();
+            collider.size = Vector2.one; // scaled by transform
+
+            var gate = go.AddComponent<PipelineGate>();
+            var so = new SerializedObject(gate);
+            so.FindProperty("requiredStages").intValue = requiredStages;
+            so.ApplyModifiedProperties();
+
+            CreateWorldLabel(platform.Position + new Vector2(0f, -3.6f), "DEPLOY", 0.14f);
+            return gate;
+        }
+
+        private static void CreatePipelineStage(Vector3 position, int order, PipelineGate gate, string label)
+        {
+            var go = new GameObject($"Stage_{order}");
+            go.transform.position = position;
+            go.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
+
+            var renderer = go.AddComponent<SpriteRenderer>();
+            renderer.sprite = SquareSprite;
+            renderer.color = new Color(0.45f, 0.45f, 0.5f); // pending grey, matches PipelineStage
+
+            var stage = go.AddComponent<PipelineStage>();
+            var so = new SerializedObject(stage);
+            so.FindProperty("order").intValue = order;
+            so.FindProperty("gate").objectReferenceValue = gate;
+            so.ApplyModifiedProperties();
+
+            CreateWorldLabel(position + new Vector3(0f, 1f, 0f), label, 0.12f);
+        }
+
+        /// <summary>World-space text, so booth players can read what each terminal does.</summary>
+        private static void CreateWorldLabel(Vector3 position, string text, float characterSize)
+        {
+            var go = new GameObject($"Label_{text}");
+            go.transform.position = position;
+
+            var textMesh = go.AddComponent<TextMesh>();
+            textMesh.text = text;
+            textMesh.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            textMesh.fontSize = 48;
+            textMesh.characterSize = characterSize;
+            textMesh.anchor = TextAnchor.MiddleCenter;
+            textMesh.color = Color.white;
+
+            go.GetComponent<MeshRenderer>().sharedMaterial = textMesh.font.material;
         }
     }
 }

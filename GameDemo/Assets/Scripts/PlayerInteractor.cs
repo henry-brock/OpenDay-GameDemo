@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 namespace OpenDay
 {
     /// <summary>
-    /// Lets the player activate the nearest <see cref="ObjectBlueprint"/> with
+    /// Lets the player activate the nearest <see cref="IInteractable"/> with
     /// the Interact action (hold E, or the gamepad's North/Y button).
     ///
     /// Setup (in the Unity Editor):
@@ -24,20 +24,25 @@ namespace OpenDay
                 return;
             }
 
-            ObjectBlueprint nearest = null;
+            IInteractable nearest = null;
             var nearestDistance = interactRange;
 
-            foreach (var blueprint in FindObjectsByType<ObjectBlueprint>(FindObjectsSortMode.None))
+            foreach (var candidate in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
             {
-                var distance = Vector2.Distance(transform.position, blueprint.transform.position);
+                if (candidate is not IInteractable interactable)
+                {
+                    continue;
+                }
+
+                var distance = Vector2.Distance(transform.position, candidate.transform.position);
                 if (distance <= nearestDistance)
                 {
-                    nearest = blueprint;
+                    nearest = interactable;
                     nearestDistance = distance;
                 }
             }
 
-            nearest?.Spawn();
+            nearest?.Interact();
         }
     }
 }

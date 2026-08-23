@@ -14,19 +14,20 @@ namespace OpenDay
     ///   2. Assign Crate Sprite (any sprite) and Ground Layer (the layer the
     ///      player's ground check looks for, so crates are standable).
     /// </summary>
-    public class ObjectBlueprint : MonoBehaviour
+    public class ObjectBlueprint : MonoBehaviour, IInteractable
     {
         [SerializeField] private Sprite crateSprite;
         [SerializeField] private Color crateColor = new Color(0.6f, 0.42f, 0.2f);
         [SerializeField] private Vector2 crateSize = new Vector2(1.2f, 1.2f);
-        [SerializeField] private Vector3 spawnOffset = new Vector3(0f, 3f, 0f);
+        // High enough that a full stack of crates never reaches the spawn point.
+        [SerializeField] private Vector3 spawnOffset = new Vector3(0f, 6f, 0f);
         [SerializeField] private int maxCrates = 4;
         [SerializeField] private int groundLayer;
 
         private int _spawnedCount;
 
         /// <summary>Instantiates one crate above this blueprint, up to <see cref="maxCrates"/>.</summary>
-        public void Spawn()
+        public void Interact()
         {
             if (_spawnedCount >= maxCrates)
             {
