@@ -6,6 +6,18 @@ All music in this project is by **TeknoAXE's Royalty Free Music**, used
 under the **Creative Commons Attribution 4.0 International licence
 (CC BY 4.0)**: <https://creativecommons.org/licenses/by/4.0/>
 
+Website: <http://www.teknoaxe.com>
+
+The creator's own stated usage terms (quoted verbatim from their video
+descriptions, kept here as supporting evidence of permission alongside the
+formal CC BY 4.0 licence):
+
+> You CAN use my Royalty Free Music for your videos and films, for
+> commercial and non commercial purposes, whether your videos are
+> monetized or not, without fear of DMCAs or Content I.D. matches. I have
+> music for your intros and outros, Let's Plays and Montages, Tutorials,
+> Skits, your Channel Trailers and VFX movies.
+
 CC BY 4.0 requires, for every track: the creator's name (declared once
 above, since it's the same for all tracks), the track title, a link to the
 source, and whether the track was changed from its original form. Fill in
