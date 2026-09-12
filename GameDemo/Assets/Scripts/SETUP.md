@@ -31,9 +31,9 @@ wire up in the Inspector, and your choices survive the scenes being rebuilt.
    - `Assets/Audio/Level3_Databases/`
 2. Re-run **OpenDay → Build Levels** (and **Build Title Screen**).
 
-One file loops on its own; several are played as a playlist in filename order,
-so prefix them (`01-...`, `02-...`) to control the order. Tick **Shuffle** on the
-scene's `Music` object to randomise instead. Volume is stored in `SaveSystem`
+One file loops on its own. Drop in several and **one is picked at random each
+time the scene loads**, then loops for that session — so repeat visits to a
+level don't always hear the same track. Volume is stored in `SaveSystem`
 (`MusicVolume`, default 0.6) ready for a settings slider.
 
 ## Wiring it up in the Unity Editor
