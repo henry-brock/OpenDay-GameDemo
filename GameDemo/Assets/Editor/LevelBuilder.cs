@@ -450,7 +450,9 @@ namespace OpenDay.Editor
         }
 
         private const string SquareSpritePath = "Assets/Sprites/Square.png";
+        private const string SpritesFolder = "Assets/Sprites";
         private static Sprite _squareSprite;
+        private static Dictionary<string, Sprite> _spriteCache = new Dictionary<string, Sprite>();
 
         // GetBuiltinExtraResource<Sprite>("Sprites/Square") needs the Editor's GUI resources,
         // which aren't loaded under -nographics batch mode, so a real sprite asset is generated instead.
@@ -496,6 +498,38 @@ namespace OpenDay.Editor
             }
         }
 
+        /// <summary>
+        /// Loads a sprite by type from Assets/Sprites/[type]/, or falls back to the
+        /// white square if not found. Types are: "platform", "collectible", "key",
+        /// "door", "crate", "stage", "gate". See Assets/Sprites/SPRITES.md for folder layout.
+        /// </summary>
+        private static Sprite LoadSpriteByType(string spriteType)
+        {
+            if (_spriteCache.ContainsKey(spriteType))
+            {
+                return _spriteCache[spriteType];
+            }
+
+            var spriteFolder = $"{SpritesFolder}/{spriteType}";
+            Sprite loaded = null;
+
+            // Try to load the first .png from the type folder
+            if (AssetDatabase.IsValidFolder(spriteFolder))
+            {
+                var assets = AssetDatabase.FindAssets("t:Sprite", new[] { spriteFolder });
+                if (assets.Length > 0)
+                {
+                    var path = AssetDatabase.GUIDToAssetPath(assets[0]);
+                    loaded = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+                }
+            }
+
+            // Fall back to the white square if not found
+            var result = loaded ?? SquareSprite;
+            _spriteCache[spriteType] = result;
+            return result;
+        }
+
         private static void CreateGroundPlatform(Platform platform, int groundLayer, Transform parent)
         {
             var go = new GameObject("Platform");
@@ -504,7 +538,7 @@ namespace OpenDay.Editor
             go.layer = groundLayer;
 
             var renderer = go.AddComponent<SpriteRenderer>();
-            renderer.sprite = SquareSprite;
+            renderer.sprite = LoadSpriteByType("platform");
             renderer.color = new Color(0.35f, 0.35f, 0.4f);
             go.transform.localScale = new Vector3(platform.Size.x, platform.Size.y, 1f);
 
@@ -519,7 +553,7 @@ namespace OpenDay.Editor
             go.transform.position = startPos;
 
             var renderer = go.AddComponent<SpriteRenderer>();
-            renderer.sprite = SquareSprite;
+            renderer.sprite = LoadSpriteByType("default");
             renderer.color = new Color(0.2f, 0.55f, 0.95f);
             go.transform.localScale = new Vector3(0.9f, 1.6f, 1f);
 
@@ -559,7 +593,7 @@ namespace OpenDay.Editor
             go.transform.localScale = new Vector3(0.6f, 0.6f, 1f);
 
             var renderer = go.AddComponent<SpriteRenderer>();
-            renderer.sprite = SquareSprite;
+            renderer.sprite = LoadSpriteByType("default");
             renderer.color = color;
 
             var collider = go.AddComponent<BoxCollider2D>();
@@ -578,7 +612,7 @@ namespace OpenDay.Editor
             go.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
 
             var renderer = go.AddComponent<SpriteRenderer>();
-            renderer.sprite = SquareSprite;
+            renderer.sprite = LoadSpriteByType("default");
             renderer.color = new Color(0.9f, 0.9f, 0.95f); // pale "blueprint" white
 
             var blueprint = go.AddComponent<ObjectBlueprint>();
@@ -609,7 +643,7 @@ namespace OpenDay.Editor
             go.layer = groundLayer;
 
             var renderer = go.AddComponent<SpriteRenderer>();
-            renderer.sprite = SquareSprite;
+            renderer.sprite = LoadSpriteByType("default");
             renderer.color = new Color(0.75f, 0.2f, 0.25f); // locked red, matches PipelineGate
 
             var collider = go.AddComponent<BoxCollider2D>();
@@ -631,7 +665,7 @@ namespace OpenDay.Editor
             go.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
 
             var renderer = go.AddComponent<SpriteRenderer>();
-            renderer.sprite = SquareSprite;
+            renderer.sprite = LoadSpriteByType("default");
             renderer.color = new Color(0.45f, 0.45f, 0.5f); // pending grey, matches PipelineStage
 
             var stage = go.AddComponent<PipelineStage>();
@@ -650,7 +684,7 @@ namespace OpenDay.Editor
             go.transform.localScale = new Vector3(0.6f, 0.6f, 1f);
 
             var renderer = go.AddComponent<SpriteRenderer>();
-            renderer.sprite = SquareSprite;
+            renderer.sprite = LoadSpriteByType("default");
             renderer.color = def.Color;
 
             var primaryKey = go.AddComponent<PrimaryKey>();
