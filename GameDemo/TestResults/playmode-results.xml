@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="10" result="Passed" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-09-18 15:55:19Z" end-time="2026-09-18 15:55:20Z" duration="0.2379914">
+  <test-suite type="TestSuite" id="1023" name="GameDemo" fullname="GameDemo" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-09-18 15:55:19Z" end-time="2026-09-18 15:55:20Z" duration="0.237991" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1016" name="OpenDay.Tests.PlayMode.dll" fullname="/home/henry/Documents/Dissertation/Github/OpenDay-GameDemo/GameDemo/Library/ScriptAssemblies/OpenDay.Tests.PlayMode.dll" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-09-18 15:55:19Z" end-time="2026-09-18 15:55:20Z" duration="0.222878" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="1244502" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1017" name="OpenDay" fullname="OpenDay" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-09-18 15:55:19Z" end-time="2026-09-18 15:55:20Z" duration="0.221773" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1018" name="Tests" fullname="OpenDay.Tests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-09-18 15:55:19Z" end-time="2026-09-18 15:55:20Z" duration="0.221139" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1019" name="PlayMode" fullname="OpenDay.Tests.PlayMode" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-09-18 15:55:19Z" end-time="2026-09-18 15:55:20Z" duration="0.220463" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1013" name="CollectibleTests" fullname="OpenDay.Tests.PlayMode.CollectibleTests" classname="OpenDay.Tests.PlayMode.CollectibleTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-18 15:55:19Z" end-time="2026-09-18 15:55:20Z" duration="0.149227" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1014" name="PlayerTouchingCollectible_CollectsModule" fullname="OpenDay.Tests.PlayMode.CollectibleTests.PlayerTouchingCollectible_CollectsModule" methodname="PlayerTouchingCollectible_CollectsModule" classname="OpenDay.Tests.PlayMode.CollectibleTests" runstate="Runnable" seed="1616843122" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.078102" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Collected Databases key (1 total).
+]]></output>
+              </test-case>
+              <test-case id="1015" name="UntaggedObjectTouchingCollectible_CollectsNothing" fullname="OpenDay.Tests.PlayMode.CollectibleTests.UntaggedObjectTouchingCollectible_CollectsNothing" methodname="UntaggedObjectTouchingCollectible_CollectsNothing" classname="OpenDay.Tests.PlayMode.CollectibleTests" runstate="Runnable" seed="166264399" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.046549" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1003" name="ForeignKeyDoorTests" fullname="OpenDay.Tests.PlayMode.ForeignKeyDoorTests" classname="OpenDay.Tests.PlayMode.ForeignKeyDoorTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.025355" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1006" name="Interact_MatchingKeyHeld_OpensBarrierAndConsumesKey" fullname="OpenDay.Tests.PlayMode.ForeignKeyDoorTests.Interact_MatchingKeyHeld_OpensBarrierAndConsumesKey" methodname="Interact_MatchingKeyHeld_OpensBarrierAndConsumesKey" classname="OpenDay.Tests.PlayMode.ForeignKeyDoorTests" runstate="Runnable" seed="1410038691" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.016462" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Carrying the Orders primary key.
+Orders relationship satisfied — door open.
+]]></output>
+              </test-case>
+              <test-case id="1004" name="Interact_NoKeyHeld_BarrierStaysSolid" fullname="OpenDay.Tests.PlayMode.ForeignKeyDoorTests.Interact_NoKeyHeld_BarrierStaysSolid" methodname="Interact_NoKeyHeld_BarrierStaysSolid" classname="OpenDay.Tests.PlayMode.ForeignKeyDoorTests" runstate="Runnable" seed="1027379333" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.002793" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[This foreign key references Orders — bring that table's primary key.
+]]></output>
+              </test-case>
+              <test-case id="1005" name="Interact_WrongKeyHeld_BarrierStaysSolidAndKeyNotConsumed" fullname="OpenDay.Tests.PlayMode.ForeignKeyDoorTests.Interact_WrongKeyHeld_BarrierStaysSolidAndKeyNotConsumed" methodname="Interact_WrongKeyHeld_BarrierStaysSolidAndKeyNotConsumed" classname="OpenDay.Tests.PlayMode.ForeignKeyDoorTests" runstate="Runnable" seed="1059728668" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.003053" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Carrying the Customers primary key.
+This foreign key references Orders — bring that table's primary key.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1001" name="KeyHolderConsumeTests" fullname="OpenDay.Tests.PlayMode.KeyHolderConsumeTests" classname="OpenDay.Tests.PlayMode.KeyHolderConsumeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.006057" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1002" name="Consume_DestroysCarriedKeyAndClearsHeld" fullname="OpenDay.Tests.PlayMode.KeyHolderConsumeTests.Consume_DestroysCarriedKeyAndClearsHeld" methodname="Consume_DestroysCarriedKeyAndClearsHeld" classname="OpenDay.Tests.PlayMode.KeyHolderConsumeTests" runstate="Runnable" seed="220829748" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.004213" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Carrying the Customers primary key.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1007" name="ObjectBlueprintTests" fullname="OpenDay.Tests.PlayMode.ObjectBlueprintTests" classname="OpenDay.Tests.PlayMode.ObjectBlueprintTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.026673" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1009" name="Interact_BeyondMaxCrates_StopsSpawning" fullname="OpenDay.Tests.PlayMode.ObjectBlueprintTests.Interact_BeyondMaxCrates_StopsSpawning" methodname="Interact_BeyondMaxCrates_StopsSpawning" classname="OpenDay.Tests.PlayMode.ObjectBlueprintTests" runstate="Runnable" seed="353949059" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.022601" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1008" name="Interact_SpawnsOneCratePerCall" fullname="OpenDay.Tests.PlayMode.ObjectBlueprintTests.Interact_SpawnsOneCratePerCall" methodname="Interact_SpawnsOneCratePerCall" classname="OpenDay.Tests.PlayMode.ObjectBlueprintTests" runstate="Runnable" seed="1462342020" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.002171" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1010" name="PipelineIntegrationTests" fullname="OpenDay.Tests.PlayMode.PipelineIntegrationTests" classname="OpenDay.Tests.PlayMode.PipelineIntegrationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.010599" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1012" name="ActivateStageOutOfOrder_ResetsProgress" fullname="OpenDay.Tests.PlayMode.PipelineIntegrationTests.ActivateStageOutOfOrder_ResetsProgress" methodname="ActivateStageOutOfOrder_ResetsProgress" classname="OpenDay.Tests.PlayMode.PipelineIntegrationTests" runstate="Runnable" seed="265926052" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.006051" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Stage run out of order — pipeline reset to the start.
+Build passed the pipeline — deploy gate open.
+]]></output>
+              </test-case>
+              <test-case id="1011" name="ActivateStagesInOrder_OpensGate" fullname="OpenDay.Tests.PlayMode.PipelineIntegrationTests.ActivateStagesInOrder_OpensGate" methodname="ActivateStagesInOrder_OpensGate" classname="OpenDay.Tests.PlayMode.PipelineIntegrationTests" runstate="Runnable" seed="991878514" result="Passed" start-time="2026-09-18 15:55:20Z" end-time="2026-09-18 15:55:20Z" duration="0.002542" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Build passed the pipeline — deploy gate open.
+Saving results to: /home/henry/.config/unity3d/DefaultCompany/GameDemo/TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
